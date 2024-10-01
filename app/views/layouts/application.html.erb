@@ -18,6 +18,9 @@
   </head>
 
   <body>
+    <% if alert %>
+      <%= alert %>
+    <% end %>
     <%= render "layouts/navbar" %>
     <%= yield %>
   </body>

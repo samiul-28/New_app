@@ -1,6 +1,9 @@
 class ProfilesController < ApplicationController
+  include Pundit
   before_action :set_profile, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
 
   # GET /profiles or /profiles.json
   def index
@@ -13,15 +16,18 @@ class ProfilesController < ApplicationController
 
   # GET /profiles/new
   def new
+    authorize Profile
     @profile = Profile.new
   end
 
   # GET /profiles/1/edit
   def edit
+    authorize Profile
   end
 
   # POST /profiles or /profiles.json
   def create
+    authorize Profile
     @profile = Profile.new(profile_params)
 
     respond_to do |format|
@@ -37,6 +43,7 @@ class ProfilesController < ApplicationController
 
   # PATCH/PUT /profiles/1 or /profiles/1.json
   def update
+    authorize Profile
     respond_to do |format|
       if @profile.update(profile_params)
         format.html { redirect_to @profile, notice: "Profile was successfully updated." }
@@ -50,6 +57,7 @@ class ProfilesController < ApplicationController
 
   # DELETE /profiles/1 or /profiles/1.json
   def destroy
+    authorize Profile
     @profile.destroy!
 
     respond_to do |format|
@@ -67,5 +75,9 @@ class ProfilesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def profile_params
       params.require(:profile).permit(:name, :district, :age)
+    end
+    def user_not_authorized
+      flash[:alert] = "You are not authorized to perform this action."
+      redirect_to(request.referrer || root_path)
     end
 end

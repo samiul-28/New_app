@@ -8,5 +8,5 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-Profile.create(name: "rony", district:"pabna", Age: 25)
-Profile.create(name:"bony", district:"natore", Age: 15)
+Profile.create( name: "rony", district: "pabna", age: 25 )
+Profile.create( name: "bony", district: "natore", age: 15 )
